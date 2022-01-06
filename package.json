@@ -1,0 +1,35 @@
+{
+  "name": "lit-emitter",
+  "version": "0.0.1",
+  "description": "Simple event emitter",
+  "main": "dist/index.js",
+  "types": "dist/types.d.ts",
+  "browserslist": [
+    "since 2017-06"
+  ],
+  "typesVersions": {
+    "<3.8": {
+      "*": [
+        "ts3.4/*"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "/dist/"
+  ],
+  "keywords": [
+    "event-emitter"
+  ],
+  "homepage": "https://github.com/kaifaty/emitter/#readme",
+  "bugs": {
+    "url": "https://github.com/kaifaty/emitter/issues"
+  },
+  "author": "kaifaty",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}
