@@ -1,10 +1,10 @@
 {
-  "name": "ts-event-emitter",
+  "name": "@kai/emitter",
   "version": "1.0.1",
-  "description": "Simple typed Event Emitter",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "description": "Simple Event Emitter with TS supports",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
   "typesVersions": {
     "<3.8": {
       "*": [
@@ -15,17 +15,19 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "watch": "tsc -watch"
+    "dev": "tsc -watch"
   },
   "files": [
-    "/src/",
-    "/dist/"
+    "/src/"
   ],
   "homepage": "https://github.com/kaifaty/emitter#readme",
   "bugs": {
     "url": "https://github.com/kaifaty/emitter/issues"
   },
-  "keywords": [],
+  "keywords": [
+    "EventEmitter",
+    "emitter"
+  ],
   "author": "kaifaty",
   "license": "MIT",
   "devDependencies": {

@@ -1,34 +1,37 @@
 import type {
     BaseMap,
-    EventStore,
-    EventName,
-    EventListener,
-    EventArgs,
-    EventWithDataStore,
+    Store,
+    Events,
+    Listener,
+    ListnerArgs,
+    StoreWithData,
 } from './types'
 import { warn } from './utils'
 
 
 export class EventEmitter<T extends BaseMap = BaseMap> {
     private isDebug = false
-    private events = {} as EventStore<T>
-    private onceEvents = {} as EventStore<T>
-    private onceDataEvents = {} as EventWithDataStore<T>
+    private events = {} as Store<T>
+    private onceEvents = {} as Store<T>
+    private onceDataEvents = {} as StoreWithData<T>
 
     protected dispatch = this.emit
     protected addListener = this.on
     protected removeListener = this.off
 
-    private getListeners(store: EventStore<T>, event: EventName<T>): Array<EventListener<T>> {
+    getStore(){
+        return this.events
+    }
+    private getListeners<E extends Events<T>>(store: Store<T>, event: E): Array<Listener<T, E>> {
         if(!store[event]){
             store[event] = []
         }
-        return store[event]
+        return store[event] as Array<Listener<T, E>>
     }
     constructor(debug = false){
         this.isDebug = debug
     }
-    emit(event: EventName<T>, params: EventArgs<T>, data?: unknown) {
+    emit<E extends Events<T>>(event: E, params: ListnerArgs<T, E>, data?: unknown) {
         this.getListeners(this.events, event).forEach(listner => listner(...params))
         this.getListeners(this.onceEvents, event).forEach(listener => listener(...params))
         this.onceEvents[event] = []
@@ -43,10 +46,10 @@ export class EventEmitter<T extends BaseMap = BaseMap> {
             console.log(`Emit event: ${event.toString()}, data:`, data)
         }
     }
-    on(event: EventName<T>, listener: EventListener<T>) {
+    on<E extends Events<T>>(event: E, listener: Listener<T, E>) {
         this.getListeners(this.events, event).push(listener)
     }
-    off(event: EventName<T>, listener: EventListener<T>) {
+    off<E extends Events<T>>(event: Events<T>, listener: Listener<T, E>) {
         const listeners = this.getListeners(this.events, event)
         const index = listeners.indexOf(listener)
         if(index < 0){
@@ -55,10 +58,10 @@ export class EventEmitter<T extends BaseMap = BaseMap> {
         }
         listeners.splice(index, 1)
     }
-    once(event: EventName<T>, listener: EventListener<T>) {
+    once<E extends Events<T>>(event: Events<T>, listener: Listener<T, E>) {
         this.getListeners(this.onceEvents, event).push(listener)
     }
-    onceData(event: EventName<T>, listener: EventListener<T>, data: unknown) {
+    onceData<E extends Events<T>>(event: Events<T>, listener: Listener<T, E>, data: unknown) {
         if(!this.onceDataEvents[event]){
             this.onceDataEvents[event] = []
         }
@@ -68,7 +71,7 @@ export class EventEmitter<T extends BaseMap = BaseMap> {
         })
     }
     
-    getListenersCount(event: EventName<T>){
+    getListenersCount(event: Events<T>){
         const eventsLen = this.getListeners(this.events, event).length
         const onceLen = this.getListeners(this.onceEvents, event).length
         const onceDataLen = this.onceDataEvents[event]?.length || 0
